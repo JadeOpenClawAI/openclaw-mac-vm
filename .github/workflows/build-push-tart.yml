@@ -25,6 +25,11 @@ permissions:
   contents: read
   packages: write
 
+# Only allow one Tart image build at a time for this repo.
+concurrency:
+  group: tart-build
+  cancel-in-progress: false
+
 jobs:
   build-push:
     # IMPORTANT: Tart image builds require Apple Silicon + virtualization access.
@@ -52,7 +57,7 @@ jobs:
             "packer/${TEMPLATE}.pkr.hcl"
 
       - name: Login to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | tart login ghcr.io -u "${{ github.repository_owner }}" --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | tart login ghcr.io --username "${{ github.repository_owner }}" --password-stdin
 
       - name: Push VM to GHCR
         run: |

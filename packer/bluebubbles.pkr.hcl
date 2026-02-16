@@ -19,6 +19,7 @@ source "tart-cli" "tart" {
   cpu_count    = 2
   memory_gb    = 8
   disk_size_gb = 50
+  headless     = true
 
   ssh_username = "admin"
   ssh_password = "admin"
