@@ -9,6 +9,8 @@ jobs:
   validate:
     # Tart Packer plugin only ships darwin binaries, so run validation on macOS.
     runs-on: macos-latest
+    env:
+      PACKER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 

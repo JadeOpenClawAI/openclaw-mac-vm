@@ -30,6 +30,8 @@ jobs:
     # IMPORTANT: Tart image builds require Apple Silicon + virtualization access.
     # Use your own self-hosted Mac runner (not GitHub-hosted macOS runners).
     runs-on: [self-hosted, macOS, ARM64, tart]
+    env:
+      PACKER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
