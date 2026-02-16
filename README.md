@@ -156,6 +156,10 @@ Installs:
 
 `RunAtLoad` + `KeepAlive` are enabled, so host reboots and VM exits auto-recover.
 
+SwiftBar menu example:
+
+![SwiftBar Tart VM menu](docs/images/swiftbar-menu.png)
+
 ---
 
 ## First boot checklist (required)
