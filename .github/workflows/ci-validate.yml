@@ -17,16 +17,15 @@ jobs:
       - name: Packer fmt check
         run: packer fmt -check packer
 
-      - name: Packer init
+      - name: Packer init + validate (bluebubbles)
         run: |
-          cd packer
-          packer init .
+          packer init packer/bluebubbles.pkr.hcl
+          packer validate packer/bluebubbles.pkr.hcl
 
-      - name: Packer validate (bluebubbles)
-        run: packer validate packer/bluebubbles.pkr.hcl
-
-      - name: Packer validate (openclaw)
-        run: packer validate packer/openclaw.pkr.hcl
+      - name: Packer init + validate (openclaw)
+        run: |
+          packer init packer/openclaw.pkr.hcl
+          packer validate packer/openclaw.pkr.hcl
 
       - name: Shellcheck scripts
         uses: ludeeus/action-shellcheck@master

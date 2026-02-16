@@ -39,16 +39,12 @@ jobs:
           tart --version
           packer version
 
-      - name: Init Packer
-        run: |
-          cd packer
-          packer init .
-
-      - name: Build VM
+      - name: Init + Build VM
         run: |
           TEMPLATE="${{ github.event.inputs.template }}"
           MACOS_VERSION="${{ github.event.inputs.macos_version }}"
 
+          packer init "packer/${TEMPLATE}.pkr.hcl"
           packer build \
             -var "macos_version=${MACOS_VERSION}" \
             "packer/${TEMPLATE}.pkr.hcl"
