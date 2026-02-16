@@ -118,10 +118,18 @@ case "$cmd" in
   set-headless) set_mode "headless" ;;
   set-graphics) set_mode "graphics" ;;
   toggle-mode)
-    [[ "$(get_mode)" == "headless" ]] && set_mode "graphics" || set_mode "headless"
+    if [[ "$(get_mode)" == "headless" ]]; then
+      set_mode "graphics"
+    else
+      set_mode "headless"
+    fi
     ;;
   toggle-mode-restart)
-    [[ "$(get_mode)" == "headless" ]] && set_mode "graphics" || set_mode "headless"
+    if [[ "$(get_mode)" == "headless" ]]; then
+      set_mode "graphics"
+    else
+      set_mode "headless"
+    fi
     restart_agent
     ;;
   status) print_status ;;
