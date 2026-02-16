@@ -1,0 +1,75 @@
+name: Build and Push Tart VM
+
+on:
+  workflow_dispatch:
+    inputs:
+      template:
+        description: "Template to build"
+        required: true
+        default: "bluebubbles"
+        type: choice
+        options: [bluebubbles, openclaw]
+      macos_version:
+        description: "Base macOS version"
+        required: true
+        default: "tahoe"
+        type: choice
+        options: [tahoe, sequoia, sonoma]
+      push_tag:
+        description: "GHCR tag"
+        required: true
+        default: "latest"
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-push:
+    # IMPORTANT: Tart image builds require Apple Silicon + virtualization access.
+    # Use your own self-hosted Mac runner (not GitHub-hosted macOS runners).
+    runs-on: [self-hosted, macOS, ARM64, tart]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify tools
+        run: |
+          tart --version
+          packer version
+
+      - name: Init Packer
+        run: |
+          cd packer
+          packer init .
+
+      - name: Build VM
+        run: |
+          TEMPLATE="${{ github.event.inputs.template }}"
+          MACOS_VERSION="${{ github.event.inputs.macos_version }}"
+
+          packer build \
+            -var "macos_version=${MACOS_VERSION}" \
+            "packer/${TEMPLATE}.pkr.hcl"
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | tart login ghcr.io -u "${{ github.repository_owner }}" --password-stdin
+
+      - name: Push VM to GHCR
+        run: |
+          TEMPLATE="${{ github.event.inputs.template }}"
+          MACOS_VERSION="${{ github.event.inputs.macos_version }}"
+          TAG="${{ github.event.inputs.push_tag }}"
+
+          if [[ "$TEMPLATE" == "bluebubbles" ]]; then
+            VM_NAME="${MACOS_VERSION}-base"
+          else
+            VM_NAME="${MACOS_VERSION}-openclaw"
+          fi
+
+          # Example image: ghcr.io/OWNER/openclaw-mac-vm-bluebubbles:tahoe-latest
+          IMAGE="ghcr.io/${{ github.repository_owner }}/openclaw-mac-vm-${TEMPLATE}:${MACOS_VERSION}-${TAG}"
+          tart push "${VM_NAME}" "${IMAGE}"
+
+          echo "Pushed ${IMAGE}"
