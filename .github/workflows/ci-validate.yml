@@ -7,7 +7,8 @@ on:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    # Tart Packer plugin only ships darwin binaries, so run validation on macOS.
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -27,7 +28,9 @@ jobs:
           packer init packer/openclaw.pkr.hcl
           packer validate packer/openclaw.pkr.hcl
 
+      - name: Install shellcheck
+        run: brew install shellcheck
+
       - name: Shellcheck scripts
-        uses: ludeeus/action-shellcheck@master
-        with:
-          scandir: './scripts ./host/scripts ./host/swiftbar'
+        run: |
+          shellcheck scripts/*.sh host/scripts/*.sh host/swiftbar/*.sh
