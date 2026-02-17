@@ -13,7 +13,7 @@ This project gives you:
 
 **Fastest path:** Use pre-built images from GitHub Container Registry instead of building locally.
 
-1) Clone pre-built BlueBubbles VM image
+1) Clone pre-built BlueBubbles VM image (Tahoe/macOS Sequoia 15.x)
 
 ```bash
 tart clone ghcr.io/jadeopenclawai/openclaw-mac-vm-bluebubbles:tahoe-latest tahoe-base
@@ -24,11 +24,6 @@ Or for OpenClaw VM:
 ```bash
 tart clone ghcr.io/jadeopenclawai/openclaw-mac-vm-openclaw:tahoe-latest tahoe-openclaw
 ```
-
-Available tags:
-- `tahoe-latest` (macOS Sequoia 15.x)
-- `sequoia-latest` (macOS Sequoia 15.x)
-- `sonoma-latest` (macOS Sonoma 14.x)
 
 2) Install host integration (auto-start + control script + optional SwiftBar)
 
@@ -170,10 +165,9 @@ tart clone ghcr.io/jadeopenclawai/openclaw-mac-vm-openclaw:tahoe-latest tahoe-op
 - `ghcr.io/jadeopenclawai/openclaw-mac-vm-bluebubbles` - BlueBubbles pre-installed
 - `ghcr.io/jadeopenclawai/openclaw-mac-vm-openclaw` - OpenClaw pre-installed
 
-**Available tags:**
-- `tahoe-latest` - macOS Sequoia 15.x (current)
-- `sequoia-latest` - macOS Sequoia 15.x (alias for tahoe)
-- `sonoma-latest` - macOS Sonoma 14.x
+**Recommended tag:** `tahoe-latest` (macOS Sequoia 15.x)
+
+Other tags exist (`sequoia-latest`, `sonoma-latest`) but Tahoe is the actively maintained version.
 
 Images are automatically built and pushed when the repository is updated.
 
@@ -199,18 +193,11 @@ packer init .
 packer build openclaw.pkr.hcl
 ```
 
-Optional version override:
-
-```bash
-packer build -var macos_version=sequoia bluebubbles.pkr.hcl
-```
-
-Or use helper script:
+Or use helper script (defaults to Tahoe):
 
 ```bash
 ./scripts/build.sh bluebubbles
 ./scripts/build.sh openclaw
-./scripts/build.sh bluebubbles tahoe
 ```
 
 ---
