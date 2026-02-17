@@ -9,9 +9,64 @@ This project gives you:
 
 ---
 
-## Quick Start (10-minute path)
+## Quick Start (5-minute path with pre-built images)
 
-If you want the fastest path to a working BlueBubbles VM:
+**Fastest path:** Use pre-built images from GitHub Container Registry instead of building locally.
+
+1) Clone pre-built BlueBubbles VM image
+
+```bash
+tart clone ghcr.io/jadeopenclawai/openclaw-mac-vm-bluebubbles:tahoe-latest tahoe-base
+```
+
+Or for OpenClaw VM:
+
+```bash
+tart clone ghcr.io/jadeopenclawai/openclaw-mac-vm-openclaw:tahoe-latest tahoe-openclaw
+```
+
+Available tags:
+- `tahoe-latest` (macOS Sequoia 15.x)
+- `sequoia-latest` (macOS Sequoia 15.x)
+- `sonoma-latest` (macOS Sonoma 14.x)
+
+2) Install host integration (auto-start + control script + optional SwiftBar)
+
+```bash
+VM_NAME=tahoe-base BRIDGE_IF=en0 SWIFTBAR_ENABLE=true ./scripts/install-host-integration.sh
+```
+
+3) First run in graphics mode
+
+```bash
+~/Scripts/tart-vm-control.sh set-graphics
+~/Scripts/tart-vm-control.sh restart
+```
+
+4) In the VM:
+- Sign in to **Messages** with your Apple ID
+- Complete BlueBubbles setup (Google Project step can be skipped if not needed)
+- Enable BlueBubbles **Run on startup / launch**
+
+5) Configure OpenClaw BlueBubbles webhook settings to match BlueBubbles server settings
+- `channels.bluebubbles.serverUrl`
+- `channels.bluebubbles.password`
+- `channels.bluebubbles.webhookPath`
+
+6) Switch VM back to headless mode
+
+```bash
+~/Scripts/tart-vm-control.sh set-headless
+~/Scripts/tart-vm-control.sh restart
+```
+
+That's it — you now have a persistent VM-backed BlueBubbles environment with host-level isolation.
+
+---
+
+## Alternative: Build images locally (15-minute path)
+
+If you want to build images yourself instead of using pre-built ones:
 
 1) Build BlueBubbles VM image
 
@@ -99,7 +154,34 @@ packer version
 
 ---
 
-## Build VM images
+## Using pre-built images from GHCR
+
+Pre-built images are available on GitHub Container Registry and updated automatically via GitHub Actions:
+
+```bash
+# BlueBubbles VM
+tart clone ghcr.io/jadeopenclawai/openclaw-mac-vm-bluebubbles:tahoe-latest tahoe-base
+
+# OpenClaw VM
+tart clone ghcr.io/jadeopenclawai/openclaw-mac-vm-openclaw:tahoe-latest tahoe-openclaw
+```
+
+**Available images:**
+- `ghcr.io/jadeopenclawai/openclaw-mac-vm-bluebubbles` - BlueBubbles pre-installed
+- `ghcr.io/jadeopenclawai/openclaw-mac-vm-openclaw` - OpenClaw pre-installed
+
+**Available tags:**
+- `tahoe-latest` - macOS Sequoia 15.x (current)
+- `sequoia-latest` - macOS Sequoia 15.x (alias for tahoe)
+- `sonoma-latest` - macOS Sonoma 14.x
+
+Images are automatically built and pushed when the repository is updated.
+
+---
+
+## Build VM images locally (optional)
+
+If you prefer to build images yourself instead of using pre-built ones from GHCR:
 
 ### BlueBubbles image
 
